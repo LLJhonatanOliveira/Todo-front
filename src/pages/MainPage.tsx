@@ -6,12 +6,13 @@ import ButtonNewRow from "../components/ButtonNew";
 
 
 export default function MainPage() {
+
   return (
     <ContainerMain>
       <TableContainer className="containerMain" component={Paper}>
         <Table className="table">
           <Head />
-          <Body />
+          <Body/>
         </Table>
         <ButtonNewRow/>
       </TableContainer>

@@ -11,24 +11,25 @@ export default async function handleNewRow(rows: Row[], setRows: React.Dispatch<
           <input type="text" id="title" class="swal2-input">
           <label for="description">Description:</label>
           <input type="text" id="description" class="swal2-input">
+          <label for="date">Due Date:</label>
+          <input type="text" id="date" class="swal2-input">
         `,
         showCancelButton: true,
         focusConfirm: false,
         preConfirm: () => {
           const title = (document.getElementById('title') as HTMLInputElement).value;
           const description = (document.getElementById('description') as HTMLInputElement).value;
-          return { title, description };
+          const date = (document.getElementById('date') as HTMLInputElement).value;
+          return { title, description, date };
         },
       });
     
       if (newData) {
-        const currentDate = dayjs();
-        const formattedDate = currentDate.format('DD/MM/YYYY')
         const newRow: Row = {
           id: idCounter,
           title: newData.title,
           description: newData.description,
-          date: formattedDate,
+          date: newData.date,
           status: false,
         };
     
