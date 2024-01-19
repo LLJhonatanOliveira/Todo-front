@@ -14,9 +14,16 @@ export default function Body(){
   function handleCheckboxChange(id: number){
    const updatedRows =  rowData.map((row) => row.id === id ? {...row, status: !row.status} : row);
    setRowData(updatedRows)
-    
   }
- 
+
+  function handleEditRow(id: number){
+
+  }
+  
+  function handleDeleteRow(id: number){
+    const updatedRows =  rowData.filter((row) => row.id !== id);
+    setRowData(updatedRows)
+  }
     
     return (
         <TableBody>
@@ -34,9 +41,8 @@ export default function Body(){
               </TableCell>
               <TableCell>
                <EditIcon />
-               <DeleteIcon />
+               <DeleteIcon onClick={() => handleDeleteRow(row.id)} />
               </TableCell>
-              
             </TableRow>
           ))}
         </TableBody>
