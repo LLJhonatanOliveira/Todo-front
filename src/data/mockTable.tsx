@@ -1,10 +1,4 @@
-export interface Row {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    status: boolean;
-}
+import { Row } from "../protocols/interface";
 
 export const rows: Row[] = [
     { id: 1, title: 'Buy milk', description: 'Buy milk at a mall', date: '19/01/2024', status: true},

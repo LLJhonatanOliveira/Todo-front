@@ -1,10 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import {
   RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
 } from 'recoil';
 import MainPage from "./pages/MainPage"
 

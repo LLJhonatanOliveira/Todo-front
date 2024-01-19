@@ -1,7 +1,7 @@
 import { atom } from "recoil";
-import { rows } from "../data/mockTable";
+import { Row } from "../protocols/interface";
 
-export const rowState = atom({
+export const rowState = atom<Row[]>({
     key: 'rowState',
-    default: rows,
+    default: [],
 });

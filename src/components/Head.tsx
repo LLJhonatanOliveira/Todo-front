@@ -3,9 +3,11 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
+
 export default function Head(){
     return(
-        <TableHead>
+      
+        <TableHead className="head">
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>Title V</TableCell>
@@ -15,5 +17,6 @@ export default function Head(){
             <TableCell>Operation</TableCell>
           </TableRow>
         </TableHead>
+      
     )
 }
