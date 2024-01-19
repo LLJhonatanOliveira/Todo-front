@@ -16,7 +16,6 @@ export default function MainPage() {
         </Table>
         <ButtonNewRow/>
       </TableContainer>
-      
     </ContainerMain>
   );
 }
