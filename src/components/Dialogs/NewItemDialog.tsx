@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,44 +6,62 @@ import {
   DialogActions,
   TextField,
   Button,
-} from '@mui/material';
-import { Row } from '../../protocols/interface';
-import { id } from '../../atoms/rowAtom';
-import { useRecoilState } from 'recoil';
+} from "@mui/material";
+import { Row } from "../../protocols/interface";
+import { id } from "../../atoms/rowAtom";
+import { useRecoilState } from "recoil";
 
 interface NewItemDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (newData:Row) => void;
+  onAdd: (newData: Row) => void;
 }
 
-function NewItemDialog({ open, onClose, onAdd }:NewItemDialogProps){
-  const [idCount, setIdCount] = useRecoilState(id)
-  const [newData, setNewData] = useState<Row>({id:idCount, title: '', description: '', date: '', status: false });
+function NewItemDialog({ open, onClose, onAdd }: NewItemDialogProps) {
+  const [idCount, setIdCount] = useRecoilState(id);
+  const [newData, setNewData] = useState<Row>({
+    id: idCount,
+    title: "",
+    description: "",
+    date: "",
+    status: false,
+  });
 
   const handleAdd = () => {
     setIdCount(idCount + 1);
     onAdd(newData);
-    setNewData({id:idCount+1, title: '', description: '', date: '', status: false });
+    setNewData({
+      id: idCount + 1,
+      title: "",
+      description: "",
+      date: "",
+      status: false,
+    });
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Add New Item</DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
         <TextField
           label="Title"
           id="title"
           fullWidth
           value={newData.title}
           onChange={(e) => setNewData({ ...newData, title: e.target.value })}
+          sx={{ marginBottom: "5px" }}
         />
         <TextField
           label="Description"
           id="description"
           fullWidth
           value={newData.description}
-          onChange={(e) => setNewData({ ...newData, description: e.target.value })}
+          onChange={(e) =>
+            setNewData({ ...newData, description: e.target.value })
+          }
+          sx={{ marginBottom: "5px" }}
         />
         <TextField
           label="Due Date"
@@ -63,6 +81,6 @@ function NewItemDialog({ open, onClose, onAdd }:NewItemDialogProps){
       </DialogActions>
     </Dialog>
   );
-};
+}
 
 export default NewItemDialog;

@@ -11,13 +11,11 @@ import Body from "../components/BodyTable/Body";
 import Head from "../components/Head";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { filter, id, rowState } from "../atoms/rowAtom";
+import { filter, rowState } from "../atoms/rowAtom";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import NewItemDialog from "../components/Dialogs/NewItemDialog";
-import EditItemDialog from "../components/Dialogs/EditItemDialog";
-import DeleteItemDialog from "../components/Dialogs/DeleteItemDialog";
 import { Row } from "../protocols/interface";
 
 export default function MainPage() {
@@ -73,8 +71,6 @@ export default function MainPage() {
         onClose={handleCloseDialog}
         onAdd={handleAddNewItem}
       />
-      <EditItemDialog />
-      <DeleteItemDialog />
     </ContainerMain>
   );
 }
