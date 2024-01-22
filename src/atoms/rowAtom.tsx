@@ -12,6 +12,11 @@ export const filter = atom<string>({
     default: '',
 });
 
+export const id = atom<number>({
+    key: 'id',
+    default:1,
+})
+
 export const openNewDialog = atom<boolean>({
     key: 'openNewDialog',
     default: false
