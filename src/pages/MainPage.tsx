@@ -8,6 +8,9 @@ import { filter } from "../atoms/rowAtom";
 import Box from '@mui/material/Box';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from "react";
+import NewItemDialog from "../components/Dialogs/NewItemDialog";
+import EditItemDialog from "../components/Dialogs/EditItemDialog";
+import DeleteItemDialog from "../components/Dialogs/DeleteItemDialog";
 
 export default function MainPage() {
   const [filterData, setFilterData] = useRecoilState(filter)
@@ -39,6 +42,9 @@ export default function MainPage() {
         <Pagination count={10} onChange={(event, value) => setPage(value)} />
       </Stack>
       <ButtonNewRow/>
+      <NewItemDialog />
+      <EditItemDialog />
+      <DeleteItemDialog />
     </ContainerMain>
   );
 }
