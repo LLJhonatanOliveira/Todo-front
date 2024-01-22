@@ -22,7 +22,7 @@ export default function DeleteItemDialog({ open, onClose, onDelete, id }:DeleteI
         <Dialog open={open} onClose={onClose}>
         <DialogTitle>Delete Item</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to delete the item {id}?</p>
+          <p>Are you sure you want to delete note {id}?</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

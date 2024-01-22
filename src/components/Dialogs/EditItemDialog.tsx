@@ -36,7 +36,7 @@ export default function EditItemDialog({
     
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Edit Item</DialogTitle>
+      <DialogTitle>Choose the field you want to add</DialogTitle>
       <DialogContent>
         <TextField
           label="Title"

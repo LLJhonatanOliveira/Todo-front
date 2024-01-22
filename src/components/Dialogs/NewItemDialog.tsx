@@ -41,7 +41,7 @@ function NewItemDialog({ open, onClose, onAdd }: NewItemDialogProps) {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add New Item</DialogTitle>
+      <DialogTitle>Choose the fields you want to add</DialogTitle>
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
