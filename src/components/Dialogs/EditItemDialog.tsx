@@ -37,6 +37,7 @@ export default function EditItemDialog({
           label="Title"
           id="title"
           fullWidth
+          
           sx={{ marginBottom: "10px", marginTop:"5px" }}
           onChange={(e) =>
             setEditedData({ ...editedData, title: e.target.value })
@@ -45,6 +46,7 @@ export default function EditItemDialog({
         <TextField
           label="Description"
           id="description"
+          
           fullWidth
           onChange={(e) =>
             setEditedData({ ...editedData, description: e.target.value })

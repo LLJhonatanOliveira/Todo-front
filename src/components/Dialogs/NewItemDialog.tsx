@@ -58,7 +58,8 @@ function NewItemDialog({ open, onClose, onAdd }: NewItemDialogProps) {
           sx={{ marginBottom: "5px" }}
         />
         <TextField
-          label="Due Date"
+          label=""
+          type="date"
           id="date"
           fullWidth
           value={newData.dueDate}
