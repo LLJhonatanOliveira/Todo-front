@@ -1,5 +1,5 @@
+import { Row } from "../../protocols/interface";
 
-import { Row } from "../../../protocols/interface";
 
 export default function handleCheckboxChange(id: number, rowData: Row[], setRowData: React.Dispatch<React.SetStateAction<Row[]>>) {
     const updatedRows = rowData.map((row) =>

@@ -14,11 +14,16 @@ import { useRecoilState } from "recoil";
 import { filter, rowState } from "../atoms/rowAtom";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewItemDialog from "../components/Dialogs/NewItemDialog";
-import { Row } from "../protocols/interface";
+import { Row, RowCreate } from "../protocols/interface";
+import useData from "../hooks/useData";
+import axios from "axios";
+import { mutate } from "swr";
 
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL}`;
 export default function MainPage() {
+  const {fetchedTodos, isLoading, isError} = useData();
   const [filterData, setFilterData] = useRecoilState(filter);
   const [rowData, setRowData] = useRecoilState(rowState);
   const [page, setPage] = useState<number>(1);
@@ -32,13 +37,26 @@ export default function MainPage() {
     setOpenDialog(false);
   };
 
-  const handleAddNewItem = (newData: Row) => {
-    setRowData([...rowData, newData]);
-
+  const handleAddNewItem = (newData: RowCreate) => {
+    const promise = axios.post('/create-todo', newData)
+    promise.then((res) => {
+      console.log(res.data)
+      mutate('/get-todo')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
     handleCloseDialog();
   };
 
+  
+console.log(fetchedTodos)
+
+
   return (
+    <>
+    {isLoading && <p>Carregando...</p>}
     <ContainerMain>
       <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
         <TextField
@@ -72,6 +90,7 @@ export default function MainPage() {
         onAdd={handleAddNewItem}
       />
     </ContainerMain>
+    </>
   );
 }
 

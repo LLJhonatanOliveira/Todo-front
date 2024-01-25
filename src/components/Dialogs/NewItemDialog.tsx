@@ -7,35 +7,29 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Row } from "../../protocols/interface";
-import { id } from "../../atoms/rowAtom";
-import { useRecoilState } from "recoil";
+import { RowCreate } from "../../protocols/interface";
+
 
 interface NewItemDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (newData: Row) => void;
+  onAdd: (newData: RowCreate) => void;
 }
 
 function NewItemDialog({ open, onClose, onAdd }: NewItemDialogProps) {
-  const [idCount, setIdCount] = useRecoilState(id);
-  const [newData, setNewData] = useState<Row>({
-    id: idCount,
+
+  const [newData, setNewData] = useState<RowCreate>({
     title: "",
     description: "",
-    date: "",
-    status: false,
+    dueDate: "",
   });
 
   const handleAdd = () => {
-    setIdCount(idCount + 1);
     onAdd(newData);
     setNewData({
-      id: idCount + 1,
       title: "",
       description: "",
-      date: "",
-      status: false,
+      dueDate: "",
     });
   };
 
@@ -67,8 +61,8 @@ function NewItemDialog({ open, onClose, onAdd }: NewItemDialogProps) {
           label="Due Date"
           id="date"
           fullWidth
-          value={newData.date}
-          onChange={(e) => setNewData({ ...newData, date: e.target.value })}
+          value={newData.dueDate}
+          onChange={(e) => setNewData({ ...newData, dueDate: e.target.value })}
         />
       </DialogContent>
       <DialogActions>
