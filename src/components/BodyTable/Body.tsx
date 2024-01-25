@@ -2,56 +2,60 @@ import { TableBody, TableRow, TableCell, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { filter, rowState } from "../../atoms/rowAtom";
-import handleCheckboxChange from "./handles/HandleCheckBox";
-import { Row } from "../../protocols/interface";
-import { useEffect, useState } from "react";
+import { page} from "../../atoms/rowAtom";
+import { Row, RowUpdate } from "../../protocols/interface";
+import {  useState } from "react";
 import EditItemDialog from "../Dialogs/EditItemDialog";
 import DeleteItemDialog from "../Dialogs/DeleteItemDialog";
+import useData from "../../hooks/useData";
+import handleCheckboxChange from "../handle/HandleCheckBox";
+import axios from "axios";
+import { mutate } from "swr";
 
 interface BodyProps {
   page: number;
 }
 
-export default function Body({ page }: BodyProps) {
-  const [rowData, setRowData] = useRecoilState(rowState);
-  const [filterData] = useRecoilValue(filter);
-  const [filteredData, setFilteredData] = useState<Row[]>([]);
+export default function Body() {
+  const {fetchedTodos, isLoading, isError} = useData();
+  const pageNumber = useRecoilValue(page);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState<Row>({id:0,
+  const [itemToEdit, setItemToEdit] = useState<RowUpdate>({id:0,
     title: "",
     description: "",
-    date: "",
-    status: false});
+});
 
   const [itemToDelete, setItemToDelete] = useState<number>(0);
 
   const handleOpenEditDialog = (item: Row) => {
+    console.log(item)
     setItemToEdit(item);
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
-    setItemToEdit({id:0,
-      title: "",
-      description: "",
-      date: "",
-      status: false,});
     setOpenEditDialog(false);
   };
 
-  const handleEditItem = (data:Row) => {
-    console.log(data)
-    const updatedRows = rowData.map(row =>
-      row.id === itemToEdit.id ? { ...row, title: data.title, description: data.description } : row
-    );
-    setRowData(updatedRows);
-    setItemToEdit({id:0,
-      title: "",
-      description: "",
-      date: "",
-      status: false})
+  const handleEditItem = (data:RowUpdate) => {
+    const promise = axios.patch(`/update-todo/${itemToEdit.id}`, {
+      title: data.title,
+      description: data.description,
+    })
+    promise.then((res) => {
+      console.log(res.data)
+      mutate('/get-todo')
+      setItemToEdit({id:0,
+        title: "",
+        description: "",
+    })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
+
     setOpenEditDialog(false);
   }
 
@@ -65,46 +69,36 @@ export default function Body({ page }: BodyProps) {
     setOpenDeleteDialog(false);
   };
 
-  const handleDeleteItem = () => {
-    const updatedRows = rowData.filter((row) => row.id !== itemToDelete);
-    setRowData(updatedRows);
+   function handleDeleteItem() {
+    const promise = axios.delete(`/delete-todo/${itemToDelete}`)
+    promise.then((res) => {
+      console.log(res.data)
+      mutate('/get-todo')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
     handleCloseDeleteDialog();
   };
 
-  useEffect(() => {
-    if (filterData !== undefined) {
-      const newData: Row[] = rowData.filter((item) =>
-        item.title.toLowerCase().includes(filterData.toLowerCase())
-      );
-      const startIndex = (page - 1) * 5;
-      const endIndex = startIndex + 5;
-      const pageData = newData.slice(startIndex, endIndex);
-      setFilteredData(pageData);
-      return;
-    }
-    const startIndex = (page - 1) * 5;
-    const endIndex = startIndex + 5;
-    const newData = rowData.slice(startIndex, endIndex);
-
-    setFilteredData(newData);
-  }, [filterData, rowData, page]);
-
+ 
   return (
     <>
       <TableBody>
-        {filteredData.length === 0
-          ? "No activity"
-          : filteredData.map((row) => (
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>Ups! Error</p>}
+        {fetchedTodos && fetchedTodos.data.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.title}</TableCell>
                 <TableCell>{row.description}</TableCell>
-                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.dueDate}</TableCell>
                 <TableCell>
                   <Checkbox
                     checked={row.status}
                     onChange={() =>
-                      handleCheckboxChange(row.id, rowData, setRowData)
+                      handleCheckboxChange(row.id, fetchedTodos,pageNumber)
                     }
                   />
                 </TableCell>

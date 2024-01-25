@@ -11,17 +11,21 @@ import Body from "../components/BodyTable/Body";
 import Head from "../components/Head";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { filter, rowState } from "../atoms/rowAtom";
+import { filter, page } from "../atoms/rowAtom";
 import Box from "@mui/material/Box";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import NewItemDialog from "../components/Dialogs/NewItemDialog";
-import { Row } from "../protocols/interface";
+import { RowCreate } from "../protocols/interface";
+import useData from "../hooks/useData";
+import axios from "axios";
+import { mutate } from "swr";
+
 
 export default function MainPage() {
+  const {fetchedTodos, isLoading, isError} = useData();
+  const [pageNumber, setPageNumber] = useRecoilState(page)
   const [filterData, setFilterData] = useRecoilState(filter);
-  const [rowData, setRowData] = useRecoilState(rowState);
-  const [page, setPage] = useState<number>(1);
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
@@ -32,14 +36,22 @@ export default function MainPage() {
     setOpenDialog(false);
   };
 
-  const handleAddNewItem = (newData: Row) => {
-    setRowData([...rowData, newData]);
-
+  const handleAddNewItem = async (newData: RowCreate) => {
+    try {
+      const promise =  await axios.post('/create-todo', newData)
+      mutate(`/get-todo?page=${pageNumber}`)
+    } catch (error) {
+      console.log(error)
+    }
+  
     handleCloseDialog();
   };
 
   return (
-    <ContainerMain>
+    <>
+    {isError && <p>Ups! Error</p>}
+    {isLoading && <p>Carregando...</p>}
+    {fetchedTodos && <ContainerMain>
       <Box sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}>
         <TextField
           label="Search"
@@ -57,11 +69,11 @@ export default function MainPage() {
       <TableContainer className="containerMain" component={Paper}>
         <Table className="table">
           <Head />
-          <Body page={page} />
+          <Body />
         </Table>
       </TableContainer>
       <Stack spacing={2} sx={{ alignItems: "center", marginTop: "15px" }}>
-        <Pagination count={10} onChange={(event, value) => setPage(value)} />
+        <Pagination count={fetchedTodos.pagination.totalPages} onChange={(event, value) => setPageNumber(value)} />
       </Stack>
       <button onClick={handleOpenDialog} className="bttNew">
         + New
@@ -71,7 +83,9 @@ export default function MainPage() {
         onClose={handleCloseDialog}
         onAdd={handleAddNewItem}
       />
-    </ContainerMain>
+    </ContainerMain>}
+    
+    </>
   );
 }
 

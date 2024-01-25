@@ -16,6 +16,11 @@ export const id = atom<number>({
     key: 'id',
     default:1,
 })
+export const page = atom<number>({
+    key: 'page',
+    default:1,
+})
+
 
 export const openNewDialog = atom<boolean>({
     key: 'openNewDialog',
