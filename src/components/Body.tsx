@@ -2,13 +2,13 @@ import { TableBody, TableRow, TableCell, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { page} from "../../atoms/rowAtom";
-import { Row, RowUpdate } from "../../protocols/interface";
+import { filter, page} from "../atoms/rowAtom";
+import { Row, RowUpdate } from "../protocols/interface";
 import {  useState } from "react";
-import EditItemDialog from "../Dialogs/EditItemDialog";
-import DeleteItemDialog from "../Dialogs/DeleteItemDialog";
-import useData from "../../hooks/useData";
-import handleCheckboxChange from "../handle/HandleCheckBox";
+import EditItemDialog from "./Dialogs/EditItemDialog";
+import DeleteItemDialog from "./Dialogs/DeleteItemDialog";
+import useData from "../hooks/useData";
+import handleCheckboxChange from "./handle/HandleCheckBox";
 import axios from "axios";
 import { mutate } from "swr";
 
@@ -19,6 +19,7 @@ interface BodyProps {
 export default function Body() {
   const {fetchedTodos, isLoading, isError} = useData();
   const pageNumber = useRecoilValue(page);
+  const [filterData, setFilterData] = useRecoilState(filter);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<RowUpdate>({id:0,
@@ -45,7 +46,7 @@ export default function Body() {
     })
     promise.then((res) => {
       console.log(res.data)
-      mutate('/get-todo')
+      mutate(`/get-todo?page=${pageNumber}&filter=${filterData}`)
       setItemToEdit({id:0,
         title: "",
         description: "",
@@ -73,7 +74,7 @@ export default function Body() {
     const promise = axios.delete(`/delete-todo/${itemToDelete}`)
     promise.then((res) => {
       console.log(res.data)
-      mutate('/get-todo')
+      mutate(`/get-todo?page=${pageNumber}&filter=${filterData}`)
     })
     .catch((err) => {
       console.log(err)
@@ -98,7 +99,7 @@ export default function Body() {
                   <Checkbox
                     checked={row.status}
                     onChange={() =>
-                      handleCheckboxChange(row.id, fetchedTodos,pageNumber)
+                      handleCheckboxChange(row.id, fetchedTodos,pageNumber, filterData)
                     }
                   />
                 </TableCell>
