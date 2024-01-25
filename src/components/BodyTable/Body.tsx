@@ -1,10 +1,10 @@
 import { TableBody, TableRow, TableCell, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { filter, rowState } from "../../atoms/rowAtom";
-import { Row } from "../../protocols/interface";
-import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { rowState } from "../../atoms/rowAtom";
+import { Row, RowUpdate } from "../../protocols/interface";
+import {  useState } from "react";
 import EditItemDialog from "../Dialogs/EditItemDialog";
 import DeleteItemDialog from "../Dialogs/DeleteItemDialog";
 import useData from "../../hooks/useData";
@@ -19,43 +19,44 @@ interface BodyProps {
 export default function Body({ page }: BodyProps) {
   const {fetchedTodos, isLoading, isError} = useData();
   const [rowData, setRowData] = useRecoilState(rowState);
-  const [filterData] = useRecoilValue(filter);
-  const [filteredData, setFilteredData] = useState<Row[]>([]);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState<Row>({id:0,
+  const [itemToEdit, setItemToEdit] = useState<RowUpdate>({id:0,
     title: "",
     description: "",
-    dueDate: "",
-    status: false});
+});
 
   const [itemToDelete, setItemToDelete] = useState<number>(0);
 
   const handleOpenEditDialog = (item: Row) => {
+    console.log(item)
     setItemToEdit(item);
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
-    setItemToEdit({id:0,
-      title: "",
-      description: "",
-      dueDate: "",
-      status: false,});
+
     setOpenEditDialog(false);
   };
 
-  const handleEditItem = (data:Row) => {
-    console.log(data)
-    const updatedRows = rowData.map(row =>
-      row.id === itemToEdit.id ? { ...row, title: data.title, description: data.description } : row
-    );
-    setRowData(updatedRows);
-    setItemToEdit({id:0,
-      title: "",
-      description: "",
-      dueDate: "",
-      status: false})
+  const handleEditItem = (data:RowUpdate) => {
+    const promise = axios.patch(`/update-todo/${itemToEdit.id}`, {
+      title: data.title,
+      description: data.description,
+    })
+    promise.then((res) => {
+      console.log(res.data)
+      mutate('/get-todo')
+      setItemToEdit({id:0,
+        title: "",
+        description: "",
+    })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    
+
     setOpenEditDialog(false);
   }
 

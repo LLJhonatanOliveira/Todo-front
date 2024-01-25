@@ -7,18 +7,14 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import { RowUpdate } from '../../protocols/interface';
 
 interface EditItemDialogProps {
   open: boolean;
   onClose: () => void;
-  onEdit: (editedData: {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    status: boolean;
-  }) => void;
-  initialData: { id: number; title: string; description: string; date: string; status:boolean };
+  onEdit: (editedData: RowUpdate
+  ) => void;
+  initialData: RowUpdate
 }
 
 export default function EditItemDialog({
@@ -28,10 +24,9 @@ export default function EditItemDialog({
   initialData,
 }: EditItemDialogProps) {
 
-    const [editedData, setEditedData] = useState(initialData);
+    const [editedData, setEditedData] = useState<RowUpdate>(initialData);
     const handleEdit = () => {
         onEdit(editedData);
-        setEditedData(initialData);
       };
     
   return (

@@ -5,4 +5,5 @@ export interface Row {
     dueDate: string;
     status: boolean;
 }
-export interface RowCreate extends Omit<Row, 'id' | 'status'> {}
+export interface RowCreate extends Omit<Row, 'id' | 'status'> {};
+export interface RowUpdate extends Omit<Row, 'dueDate' | 'status'> {}
