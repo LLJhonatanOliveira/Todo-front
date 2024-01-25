@@ -1,8 +1,8 @@
 import { TableBody, TableRow, TableCell, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useRecoilState } from "recoil";
-import { rowState } from "../../atoms/rowAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { page} from "../../atoms/rowAtom";
 import { Row, RowUpdate } from "../../protocols/interface";
 import {  useState } from "react";
 import EditItemDialog from "../Dialogs/EditItemDialog";
@@ -16,9 +16,9 @@ interface BodyProps {
   page: number;
 }
 
-export default function Body({ page }: BodyProps) {
+export default function Body() {
   const {fetchedTodos, isLoading, isError} = useData();
-  const [rowData, setRowData] = useRecoilState(rowState);
+  const pageNumber = useRecoilValue(page);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<RowUpdate>({id:0,
@@ -35,7 +35,6 @@ export default function Body({ page }: BodyProps) {
   };
 
   const handleCloseEditDialog = () => {
-
     setOpenEditDialog(false);
   };
 
@@ -89,7 +88,7 @@ export default function Body({ page }: BodyProps) {
       <TableBody>
         {isLoading && <p>Loading...</p>}
         {isError && <p>Ups! Error</p>}
-        {fetchedTodos && fetchedTodos.map((row) => (
+        {fetchedTodos && fetchedTodos.data.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.title}</TableCell>
@@ -99,7 +98,7 @@ export default function Body({ page }: BodyProps) {
                   <Checkbox
                     checked={row.status}
                     onChange={() =>
-                      handleCheckboxChange(row.id, rowData, setRowData)
+                      handleCheckboxChange(row.id, fetchedTodos,pageNumber)
                     }
                   />
                 </TableCell>

@@ -1,16 +1,24 @@
 import axios from "axios";
 import useSWR from "swr";
-import { Row } from "../protocols/interface";
+import { FetchedTodos } from "../protocols/interface";
+import { useRecoilValue } from "recoil";
+import { page } from "../atoms/rowAtom";
 interface UseDataResult {
-    fetchedTodos: Row[];
+    fetchedTodos: FetchedTodos;
     isLoading: boolean;
     isError: any; 
   }
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
 export default function useData(): UseDataResult{
-    
-    const {data, error, isLoading} = useSWR('/get-todo', (url) =>
-    axios.get(url).then((res) => res.data))
+    const pageNumber = useRecoilValue(page);
+    console.log(pageNumber)
+    const {data, error, isLoading} = useSWR(`/get-todo?page=${pageNumber}`, (url) =>
+    axios.get(url).then((res) => 
+    res.data
+    ))
+
+    console.log(data,'estou no hook')
+   
     return {
         fetchedTodos: data,
         isLoading,

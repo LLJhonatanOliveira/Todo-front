@@ -7,3 +7,10 @@ export interface Row {
 }
 export interface RowCreate extends Omit<Row, 'id' | 'status'> {};
 export interface RowUpdate extends Omit<Row, 'dueDate' | 'status'> {}
+export interface FetchedTodos extends Row {
+    data: Row[],
+    pagination: {
+        currentPage: number,
+        totalPages: number
+    }
+}
